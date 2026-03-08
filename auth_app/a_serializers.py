@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate
 from django.utils import timezone
 
 from .models import User, PasswordResetOTP
-from eventform_app.models import EventForm
+# from eventform_app.models import EventForm
 
 
 # ==========================
@@ -104,12 +104,13 @@ class ResetPasswordSerializer(serializers.Serializer):
 # ==========================
 # EventForm Serializer
 # ==========================
-class EventFormSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = EventForm
-        fields = ['event_name', 'contact_number', 'photo', 'event_date']
+# class EventFormSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = EventForm
+#         fields = ['event_name', 'contact_number', 'photo', 'event_date']
 
-    def validate_contact_number(self, value):
-        if len(value) < 10:
-            raise serializers.ValidationError("Contact number must be at least 10 digits.")
-        return value
+#     def validate_contact_number(self, value):
+#         if len(value) < 10:
+#             raise serializers.ValidationError("Contact number must be at least 10 digits.")
+#         return value
+
