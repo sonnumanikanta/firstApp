@@ -147,29 +147,30 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='testtempy56@gmail.com')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')  # Gmail App Password required
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default=f"Tempy <{EMAIL_HOST_USER}>")
 
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
-    }
-}
-# ================= AWS S3 CONFIG =================
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
+#         "LOCATION": "redis://127.0.0.1:6379/1",
+#         "OPTIONS": {
+#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+#         }
+#     }
+# }
+# # ================= AWS S3 CONFIG =================
 
-DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+# DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
-AWS_ACCESS_KEY_ID = "YOUR_KEY"
-AWS_SECRET_ACCESS_KEY = "YOUR_SECRET"
-AWS_STORAGE_BUCKET_NAME = "your-bucket-name"
-AWS_S3_REGION_NAME = "ap-south-1"
+# AWS_ACCESS_KEY_ID = "YOUR_KEY"
+# AWS_SECRET_ACCESS_KEY = "YOUR_SECRET"
+# AWS_STORAGE_BUCKET_NAME = "your-bucket-name"
+# AWS_S3_REGION_NAME = "ap-south-1"
 
-AWS_QUERYSTRING_AUTH = False
-AWS_S3_FILE_OVERWRITE = False
-AWS_DEFAULT_ACL = None
+# AWS_QUERYSTRING_AUTH = False
+# AWS_S3_FILE_OVERWRITE = False
+# AWS_DEFAULT_ACL = None
 
-AWS_S3_SIGNATURE_VERSION = "s3v4"
+# AWS_S3_SIGNATURE_VERSION = "s3v4"
 
 
-MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/"
+# MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/"
+
