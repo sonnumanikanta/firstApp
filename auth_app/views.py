@@ -14,7 +14,7 @@ from .a_serializers import (
     SignupSerializer,
     ForgetPasswordSerializer,
     ResetPasswordSerializer,
-    EventFormSerializer,
+    # EventFormSerializer,
 )
 from .models import User, PasswordResetOTP,SignupOTP
 from eventform_app.models import EventForm
@@ -324,19 +324,19 @@ class ResetPasswordView(APIView):
         return success_response({"message": "Password reset successful"})
 
 
-class EventFormView(APIView):
-    permission_classes = [AllowAny]
-    def post(self, request):
-        serializer = EventFormSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"message": "Event form saved successfully"}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# class EventFormView(APIView):
+#     permission_classes = [AllowAny]
+#     def post(self, request):
+#         serializer = EventFormSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response({"message": "Event form saved successfully"}, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def get(self, request):
-        forms = EventForm.objects.all()
-        serializer = EventFormSerializer(forms, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+#     def get(self, request):
+#         forms = EventForm.objects.all()
+#         serializer = EventFormSerializer(forms, many=True)
+#         return Response(serializer.data, status=status.HTTP_200_OK)
 class CustomTokenObtainPairView(TokenObtainPairView):
     permission_classes = [AllowAny]
 
@@ -373,3 +373,4 @@ class CustomTokenVerifyView(TokenVerifyView):
             return success_response("Token valid")
 
         return error_response("Invalid token")        
+
