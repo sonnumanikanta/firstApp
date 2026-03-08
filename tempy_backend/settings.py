@@ -1,7 +1,7 @@
 from pathlib import Path
 from decouple import config  # for .env support
 from datetime import timedelta
-
+import dj_database_url
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # 🔐 Secret Key (from .env)
@@ -179,5 +179,6 @@ DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default=f"Tempy <{EMAIL_HOST_U
 
 
 # MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/"
+
 
 
