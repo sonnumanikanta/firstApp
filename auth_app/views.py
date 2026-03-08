@@ -17,7 +17,7 @@ from .a_serializers import (
     # EventFormSerializer,
 )
 from .models import User, PasswordResetOTP,SignupOTP
-from eventform_app.models import EventForm
+# from eventform_app.models import EventForm
 from .email_utils import send_welcome_email, send_otp_email
 
 logger = logging.getLogger(__name__)
@@ -373,4 +373,5 @@ class CustomTokenVerifyView(TokenVerifyView):
             return success_response("Token valid")
 
         return error_response("Invalid token")        
+
 
