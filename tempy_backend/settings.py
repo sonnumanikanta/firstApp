@@ -117,21 +117,27 @@ SIMPLE_JWT = {
 
 # ✅ PostgreSQL Database settings
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'tempy_backend_db',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        # 'ENGINE': 'django.db.backends.postgresql',
-        # 'NAME': config("POSTGRES_DB", default="postgres"),
-        # 'USER': config("POSTGRES_USER", default="postgres"),
-        # 'PASSWORD': config("POSTGRES_PASSWORD", default="postgres"),
-        #'HOST': config("POSTGRES_HOST", default="localhost"),
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
-        #'PORT': config("POSTGRES_PORT", default="5432"),
-    }
+    "default": dj_database_url.config(
+        conn_max_age=600,
+        ssl_require=True
+    )
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'tempy_backend_db',
+#         'USER': 'postgres',
+#         'PASSWORD': 'postgres',
+#         # 'ENGINE': 'django.db.backends.postgresql',
+#         # 'NAME': config("POSTGRES_DB", default="postgres"),
+#         # 'USER': config("POSTGRES_USER", default="postgres"),
+#         # 'PASSWORD': config("POSTGRES_PASSWORD", default="postgres"),
+#         #'HOST': config("POSTGRES_HOST", default="localhost"),
+#         'HOST': '127.0.0.1',
+#         'PORT': '5432',
+#         #'PORT': config("POSTGRES_PORT", default="5432"),
+#     }
+# }
 
 # ✅ Custom User Model
 AUTH_USER_MODEL = "auth_app.User"
@@ -173,4 +179,5 @@ DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default=f"Tempy <{EMAIL_HOST_U
 
 
 # MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/"
+
 
