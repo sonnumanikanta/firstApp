@@ -1,0 +1,113 @@
+{
+    "info": {
+      "name": "Tempy Backend APIs",
+      "_postman_id": "tempy-backend-apis-collection",
+      "description": "Postman collection for Tempy backend API testing",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+      {
+        "name": "Signup",
+        "request": {
+          "method": "POST",
+          "header": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"username\": \"sagar\",\n  \"email\": \"sagar@example.com\",\n  \"password\": \"Test@123\"\n}"
+          },
+          "url": {
+            "raw": "http://127.0.0.1:8000/signup/",
+            "protocol": "http",
+            "host": ["127.0.0.1"],
+            "port": "8000",
+            "path": ["signup"]
+          }
+        }
+      },
+      {
+        "name": "Login",
+        "request": {
+          "method": "POST",
+          "header": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"username\": \"sagar\",\n  \"password\": \"Test@123\"\n}"
+          },
+          "url": {
+            "raw": "http://127.0.0.1:8000/login/",
+            "protocol": "http",
+            "host": ["127.0.0.1"],
+            "port": "8000",
+            "path": ["login"]
+          }
+        }
+      },
+      {
+        "name": "Token Refresh",
+        "request": {
+          "method": "POST",
+          "header": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"refresh\": \"<paste_refresh_token_here>\"\n}"
+          },
+          "url": {
+            "raw": "http://127.0.0.1:8000/token/refresh/",
+            "protocol": "http",
+            "host": ["127.0.0.1"],
+            "port": "8000",
+            "path": ["token", "refresh"]
+          }
+        }
+      },
+      {
+        "name": "Profile",
+        "request": {
+          "method": "GET",
+          "header": [{ "key": "Authorization", "value": "Bearer <paste_access_token_here>" }],
+          "url": {
+            "raw": "http://127.0.0.1:8000/profile/",
+            "protocol": "http",
+            "host": ["127.0.0.1"],
+            "port": "8000",
+            "path": ["profile"]
+          }
+        }
+      },
+      {
+        "name": "EventForm Create",
+        "request": {
+          "method": "POST",
+          "header": [
+            { "key": "Content-Type", "value": "application/json" },
+            { "key": "Authorization", "value": "Bearer <paste_access_token_here>" }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"event_name\": \"New Year Party\",\n  \"contact_number\": \"9876543210\",\n  \"photo\": \"http://example.com/photo.jpg\",\n  \"event_date\": \"2025-12-31T20:00:00\"\n}"
+          },
+          "url": {
+            "raw": "http://127.0.0.1:8000/event-form/",
+            "protocol": "http",
+            "host": ["127.0.0.1"],
+            "port": "8000",
+            "path": ["event-form"]
+          }
+        }
+      },
+      {
+        "name": "EventForm List",
+        "request": {
+          "method": "GET",
+          "header": [{ "key": "Authorization", "value": "Bearer <paste_access_token_here>" }],
+          "url": {
+            "raw": "http://127.0.0.1:8000/event-form/",
+            "protocol": "http",
+            "host": ["127.0.0.1"],
+            "port": "8000",
+            "path": ["event-form"]
+          }
+        }
+      }
+    ]
+  }
