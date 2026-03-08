@@ -30,17 +30,17 @@ INSTALLED_APPS = [
 
     # Your apps
     'auth_app',
-    'eventform_app',
-    'resume_app',
-    'biodata_app',
-    'invitation_app',
-    'certificate_app',
-    'visiting_card_app',
-    'funeral_app',
-    'businessdoc_app',
-    'socialcontent_app',
-    'greeting_app',
-    'storages',
+    # 'eventform_app',
+    # 'resume_app',
+    # 'biodata_app',
+    # 'invitation_app',
+    # 'certificate_app',
+    # 'visiting_card_app',
+    # 'funeral_app',
+    # 'businessdoc_app',
+    # 'socialcontent_app',
+    # 'greeting_app',
+    # 'storages',
 ]
 
 MIDDLEWARE = [
@@ -170,5 +170,6 @@ AWS_S3_FILE_OVERWRITE = False
 AWS_DEFAULT_ACL = None
 
 AWS_S3_SIGNATURE_VERSION = "s3v4"
+
 
 MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/"
