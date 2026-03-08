@@ -9,7 +9,7 @@ from .views import (
     CustomTokenObtainPairView,
     CustomTokenRefreshView,
     CustomTokenVerifyView,
-    EventFormView,
+    # EventFormView,
 )
 
 urlpatterns = [
@@ -29,5 +29,6 @@ urlpatterns = [
     path('reset-password/', ResetPasswordView.as_view(), name='reset_password'),
 
     # Event Form APIs
-    path('event-form/', EventFormView.as_view(), name='event_form'),
+    # path('event-form/', EventFormView.as_view(), name='event_form'),
+
 ]
