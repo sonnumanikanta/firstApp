@@ -152,6 +152,9 @@ EMAIL_TIMEOUT = 10
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='testtempy56@gmail.com')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')  # Gmail App Password required
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default=f"Tempy <{EMAIL_HOST_USER}>")
+CSRF_TRUSTED_ORIGINS = [
+    "https://firstapp-x9ic.onrender.com"
+]
 
 # CACHES = {
 #     "default": {
@@ -179,6 +182,7 @@ DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default=f"Tempy <{EMAIL_HOST_U
 
 
 # MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/"
+
 
 
 
