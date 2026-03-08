@@ -1,6 +1,6 @@
 import logging
 import socket
-from django.http import HttpResponse,Jsonresponse
+from django.http import HttpResponse,JsonResponse
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -381,5 +381,6 @@ def smtp_test(request):
         return JsonResponse({"status": "SMTP reachable"})
     except Exception as e:
         return JsonResponse({"status": "SMTP failed", "error": str(e)})
+
 
 
