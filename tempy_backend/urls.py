@@ -7,13 +7,14 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from auth_app.views import smtp_test
+from auth_app.views import smtp_test,health_check
 
 
 urlpatterns = [
     # ✅ Auth routes
     path('auth/', include('auth_app.urls')),
     path("smtp-test/", smtp_test),
+    path("health/", health_check),
 
     # # ✅ EventForm routes
     # path('eventform/', include('eventform_app.urls')),
@@ -37,5 +38,6 @@ urlpatterns = [
 if settings.DEBUG:
 
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 
 
