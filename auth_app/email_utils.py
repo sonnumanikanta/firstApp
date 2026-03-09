@@ -62,7 +62,7 @@ def send_welcome_email(user_email: str, user_name: str):
 #     except Exception as e:
 #         logger.error("OTP email send failed for %s: %s", user_email, e)
 #         raise e
- def send_otp_email(user_email: str, user_name: str, otp_code: str):
+def send_otp_email(user_email: str, user_name: str, otp_code: str):
         """
         Sends a formatted HTML OTP email for password reset.
         """
@@ -91,6 +91,7 @@ def send_welcome_email(user_email: str, user_name: str):
             logger.error("OTP email send failed for %s: %s", user_email, e)
             raise e
      
+
 
 
 
