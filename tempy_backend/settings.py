@@ -151,7 +151,7 @@ EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
 EMAIL_TIMEOUT = 10
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='apikey')
 EMAIL_HOST_PASSWORD = config('SENDGRID_API_KEY', default='')  # Gmail App Password required
-DEFAULT_FROM_EMAIL = config('EMAIL_FROM', default=f"Tempy <{EMAIL_HOST_USER}>")
+DEFAULT_FROM_EMAIL = config('EMAIL_FROM')
 ALLOWED_HOSTS = ["firstapp-x9ic.onrender.com"]
 CSRF_TRUSTED_ORIGINS = [
     "https://firstapp-x9ic.onrender.com"
@@ -183,6 +183,7 @@ CSRF_TRUSTED_ORIGINS = [
 
 
 # MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/"
+
 
 
 
