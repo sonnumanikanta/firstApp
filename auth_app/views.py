@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.hashers import make_password
 from django.utils import timezone
+from django.db import connection
 import random, datetime
 from .response_utils import success_response, error_response
 from rest_framework.permissions import AllowAny
@@ -389,6 +390,13 @@ def health_check(request):
         "status": "Server running",
         "service": "Tempy Auth API"
     })        
+def db_test(request):
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+        return JsonResponse({"database": "connected"})
+    except Exception as e:
+        return JsonResponse({"database": "error", "message": str(e)})
 
 
 
