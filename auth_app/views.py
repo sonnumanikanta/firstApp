@@ -383,6 +383,13 @@ def smtp_test(request):
         return JsonResponse({"status": "SMTP reachable"})
     except Exception as e:
         return JsonResponse({"status": "SMTP failed", "error": str(e)})
+        
+def health_check(request):
+    return JsonResponse({
+        "status": "Server running",
+        "service": "Tempy Auth API"
+    })        
+
 
 
 
