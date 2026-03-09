@@ -88,9 +88,11 @@ def send_otp_email(user_email: str, user_name: str, otp_code: str):
             logger.info("OTP email sent to %s", user_email)
     
         except Exception as e:
+            print("SENDGRID ERROR:", str(e))
             logger.error("OTP email send failed for %s: %s", user_email, e)
             raise e
      
+
 
 
 
