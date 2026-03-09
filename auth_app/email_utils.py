@@ -63,33 +63,34 @@ def send_welcome_email(user_email: str, user_name: str):
 #         logger.error("OTP email send failed for %s: %s", user_email, e)
 #         raise e
  def send_otp_email(user_email: str, user_name: str, otp_code: str):
-    """
-    Sends a formatted HTML OTP email for password reset.
-    """
-
-    subject = "🔐 Tempy Password Reset OTP"
-
-    # Load HTML template
-    html_content = render_to_string(
-        "emails/password_reset_otp.html",
-        {"user_name": user_name, "otp": otp_code},
-    )
-
-    message = Mail(
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        to_emails=user_email,
-        subject=subject,
-        html_content=html_content,
-    )
-    try:
-        sg = SendGridAPIClient(os.environ.get("SENDGRID_API_KEY"))
-        sg.send(message)
-
-        logger.info("OTP email sent to %s", user_email)
-
-    except Exception as e:
-        logger.error("OTP email send failed for %s: %s", user_email, e)
-        raise e
+        """
+        Sends a formatted HTML OTP email for password reset.
+        """
+    
+        subject = "🔐 Tempy Password Reset OTP"
+    
+        # Load HTML template
+        html_content = render_to_string(
+            "emails/password_reset_otp.html",
+            {"user_name": user_name, "otp": otp_code},
+        )
+    
+        message = Mail(
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to_emails=user_email,
+            subject=subject,
+            html_content=html_content,
+        )
+        try:
+            sg = SendGridAPIClient(os.environ.get("SENDGRID_API_KEY"))
+            sg.send(message)
+    
+            logger.info("OTP email sent to %s", user_email)
+    
+        except Exception as e:
+            logger.error("OTP email send failed for %s: %s", user_email, e)
+            raise e
      
+
 
 
