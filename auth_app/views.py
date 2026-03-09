@@ -1,6 +1,7 @@
 import logging
 import socket
 from django.http import HttpResponse,JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -373,7 +374,8 @@ class CustomTokenVerifyView(TokenVerifyView):
         if response.status_code == 200:
             return success_response("Token valid")
 
-        return error_response("Invalid token")        
+        return error_response("Invalid token")       
+@csrf_exempt        
 def smtp_test(request):
     try:
         sock = socket.create_connection(("smtp.gmail.com", 587), timeout=10)
@@ -381,6 +383,7 @@ def smtp_test(request):
         return JsonResponse({"status": "SMTP reachable"})
     except Exception as e:
         return JsonResponse({"status": "SMTP failed", "error": str(e)})
+
 
 
 
