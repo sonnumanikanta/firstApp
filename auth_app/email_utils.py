@@ -35,7 +35,8 @@ def send_welcome_email(user_email: str, user_name: str):
     # email.content_subtype = "html"  # ensure HTML format
 
     try:
-        email.send(fail_silently=False)
+        sg = SendGridAPIClient(settings.SENDGRID_API_KEY)
+        response = sg.send(message)
         logger.info("Welcome email sent to %s", user_email)
     except Exception as e:
         logger.error("Email send failed for %s: %s", user_email, e)
@@ -98,6 +99,7 @@ def send_otp_email(user_email: str, user_name: str, otp_code: str):
             logger.error("OTP email send failed for %s: %s", user_email, e)
             raise e
      
+
 
 
 
