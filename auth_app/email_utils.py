@@ -20,12 +20,18 @@ def send_welcome_email(user_email: str, user_name: str):
     html_content = render_to_string('emails/welcome_back.html', {'name': user_name})
 
     # ✅ Create email object with explicit sender
-    email = EmailMessage(
-        subject=subject,
-        body=html_content,
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        to=[user_email]
-    )
+    # email = EmailMessage(
+    #     subject=subject,
+    #     body=html_content,
+    #     from_email=settings.DEFAULT_FROM_EMAIL,
+    #     to=[user_email]
+    # )
+    message = Mail(
+    from_email=settings.DEFAULT_FROM_EMAIL,
+    to_emails=user_email,
+    subject=subject,
+    html_content=html_content,
+        )
     email.content_subtype = "html"  # ensure HTML format
 
     try:
@@ -92,6 +98,7 @@ def send_otp_email(user_email: str, user_name: str, otp_code: str):
             logger.error("OTP email send failed for %s: %s", user_email, e)
             raise e
      
+
 
 
 
