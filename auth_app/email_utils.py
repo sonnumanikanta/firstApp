@@ -32,7 +32,7 @@ def send_welcome_email(user_email: str, user_name: str):
     subject=subject,
     html_content=html_content,
         )
-    email.content_subtype = "html"  # ensure HTML format
+    # email.content_subtype = "html"  # ensure HTML format
 
     try:
         email.send(fail_silently=False)
@@ -98,6 +98,7 @@ def send_otp_email(user_email: str, user_name: str, otp_code: str):
             logger.error("OTP email send failed for %s: %s", user_email, e)
             raise e
      
+
 
 
 
