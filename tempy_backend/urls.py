@@ -21,7 +21,7 @@ urlpatterns = [
     # path('eventform/', include('eventform_app.urls')),
 
     # # ✅ Resume routes (CRUD + photo upload + ATS scoring)
-    # path('api/', include('resume_app.urls')),   # exposes /api/resumes/, /api/experiences/, /api/education/, /api/skills/
+    path('api/', include('resume_app.urls')),   # exposes /api/resumes/, /api/experiences/, /api/education/, /api/skills/
 
     # # ✅ Other apps
     # path('biodata/', include('biodata_app.urls')),
