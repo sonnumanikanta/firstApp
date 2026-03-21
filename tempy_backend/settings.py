@@ -31,7 +31,7 @@ INSTALLED_APPS = [
     # Your apps
     'auth_app',
     # 'eventform_app',
-    # 'resume_app',
+     'resume_app',
     # 'biodata_app',
     # 'invitation_app',
     # 'certificate_app',
