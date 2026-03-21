@@ -188,6 +188,7 @@ CSRF_TRUSTED_ORIGINS = [
 
 
 # MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/"
+print("AWS URL:", config("AWS_S3_ENDPOINT_URL", default="NOT FOUND"))
 
 
 
