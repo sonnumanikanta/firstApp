@@ -32,7 +32,7 @@ urlpatterns = [
     # path('business-documents/', include('businessdoc_app.urls')),
     # path('socialcontent/', include('socialcontent_app.urls')),
     # path('greetings/', include('greeting_app.urls')),
-    # path("admin/", admin.site.urls)
+    path("admin/", admin.site.urls)
 ]
 
 # ✅ Media files serving (for resume photo uploads in development)
