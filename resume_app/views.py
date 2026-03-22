@@ -1,7 +1,7 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.parsers import MultiPartParser, FormParser,JsonParser
+from rest_framework.parsers import MultiPartParser, FormParser,JSONParser
 from rest_framework.permissions import IsAuthenticated, BasePermission
 
 from .models import Resume, Experience, Education, Skill
@@ -16,7 +16,7 @@ class IsOwner(BasePermission):
 
 class ResumeViewSet(viewsets.ModelViewSet):
     serializer_class = ResumeSerializer
-    parser_classes = [MultiPartParser, FormParser,JsonParser]
+    parser_classes = [MultiPartParser, FormParser,JSONParser]
     permission_classes = [IsAuthenticated, IsOwner]
 
     def get_queryset(self):
