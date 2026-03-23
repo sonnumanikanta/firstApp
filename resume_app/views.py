@@ -573,8 +573,16 @@ class GenerateResumeView(APIView):
 
         # 6. Generate PDF
         if rendered:
-            pdf_path = generate_pdf_from_html(rendered)
-            # print("RENDERED:",rendered)
+            print("RENDERED HTML:", rendered[:500])       
+            try:
+                pdf_path = generate_pdf_from_html(rendered)
+            except Exception as e:
+                print("PDF ERROR:", str(e))
+                return Response({
+                    "error": "PDF generation failed",
+                    "details": str(e),
+                    "html_preview": rendered
+                })
 
         # 7. Upload to R2
         resume_url = None
