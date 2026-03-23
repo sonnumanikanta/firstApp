@@ -586,35 +586,34 @@ class GenerateResumeView(APIView):
             template_content = None
             rendered = None
             pdf_path = None
-    
+
             try:
-        # Load template
+    # 🔥 LOAD TEMPLATE FROM URL (R2 SAFE)
                 if file_ext == "html":
-                    with template.file.open("rb") as f:
-                        template_content = f.read().decode("utf-8", errors="ignore")
-    
-        # Generate HTML
+                    import requests
+                    template_url = template.file.url
+                    response = requests.get(template_url)
+                    template_content = response.text
+
+    # HTML generation
                 if template_content:
                     rendered = generate_resume_html(
-                    user=request.user,
-                    resume=resume,
-                    template_id=template.id,
-                    template_html=template_content
-                )
-    
+                        user=request.user,
+                        resume=resume,
+                        template_id=template.id,
+                        template_html=template_content
+                    )
                 print("RENDERED HTML:", rendered[:300] if rendered else "None")
-    
-        # Generate PDF
+    # PDF generation
                 if rendered:
                     pdf_path = generate_pdf_from_html(rendered)
-    
-            except Exception as e:
+
+                except Exception as e:
                     print("🔥 ERROR:", str(e))
                     return Response({
                         "error": "Generation failed",
                         "details": str(e)
-                        })
-
+                    })
         # 7. Upload to R2
         resume_url = None
 
