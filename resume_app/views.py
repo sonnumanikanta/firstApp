@@ -510,156 +510,241 @@ class SelectTemplateView(APIView):
 #         })
 class GenerateResumeView(APIView):
     permission_classes = [IsAuthenticated]
-
     def get(self, request, resume_id):
 
-        # 1. Get resume
         try:
+            print("🔥 NEW CODE RUNNING")
+
+        # 1. Get resume
             resume = Resume.objects.get(id=resume_id, owner=request.user)
-        except Resume.DoesNotExist:
-            return Response({"error": "Resume not found"}, status=404)
 
         # 2. Get selected template
-        try:
             selection = ResumeTemplateSelection.objects.get(resume=resume)
-        except ResumeTemplateSelection.DoesNotExist:
-            return Response({"error": "Template not selected"}, status=400)
 
-        template = selection.template
-        file_ext = template.file.name.split(".")[-1].lower()
+            template = selection.template
+            file_ext = template.file.name.split(".")[-1].lower()
 
-        # 3. Connect to R2
-        client = boto3.client(
-            "s3",
-            endpoint_url=settings.AWS_S3_ENDPOINT_URL,
-            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-            region_name="auto"
+        # 3. R2 client
+            client = boto3.client(
+                "s3",
+                endpoint_url=settings.AWS_S3_ENDPOINT_URL,
+                aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+                region_name="auto"
+            )
+
+        # 4. Already generated
+            if resume.generated_resume_key:
+                signed_url = client.generate_presigned_url(
+                    "get_object",
+                    Params={
+                        "Bucket": settings.AWS_STORAGE_BUCKET_NAME,
+                        "Key": resume.generated_resume_key
+                    },
+                    ExpiresIn=3600
+                )
+                return Response({"download_url": signed_url})
+
+        # 5. Load template (SAFE)
+            import requests
+            template_url = template.file.url
+            print("TEMPLATE URL:", template_url)
+    
+            response = requests.get(template_url)
+            template_content = response.text
+    
+            # 6. Generate HTML
+            rendered = generate_resume_html(
+                user=request.user,
+                resume=resume,
+                template_id=template.id,
+                template_html=template_content
+            )
+    
+            print("HTML GENERATED")
+    
+            # 7. Generate PDF
+            pdf_path = generate_pdf_from_html(rendered)
+            print("PDF GENERATED:", pdf_path)
+
+        # 8. Upload
+        object_key = f"generated_resumes/user_{request.user.id}_resume_{resume.id}.pdf"
+
+        client.upload_file(
+            pdf_path,
+            settings.AWS_STORAGE_BUCKET_NAME,
+            object_key
         )
-        # print("DEBUG KEY BEFORE IF:", resume.generated_resume_key)
-        
-        if resume.generated_resume_key:
-            signed_url = client.generate_presigned_url(
-                "get_object",
-                Params={
-                    "Bucket": settings.AWS_STORAGE_BUCKET_NAME,
-                    "Key": resume.generated_resume_key
-                },
-                ExpiresIn=3600
-            )
 
-            return Response({
-                "resume_id": resume.id,
-                "message": "Already generated",
-                "download_url": signed_url
-            })
+        resume.generated_resume_key = object_key
+        resume.save()
 
-        # # 5. Generate HTML
-        # template_content = None
-        # rendered = None
-        # pdf_path = None
-
-        # if file_ext == "html":
-        #     with template.file.open("rb") as f:
-        #         template_content = f.read().decode("utf-8", errors="ignore")
-
-        # if template_content:
-        #     rendered = generate_resume_html(
-        #         user=request.user,
-        #         resume=resume,
-        #         template_id=template.id,
-        #         template_html=template_content
-        #     )
-
-        # # 6. Generate PDF
-        # if rendered:
-        #     print("RENDERED HTML:", rendered[:500])       
-        #     try:
-        #         pdf_path = generate_pdf_from_html(rendered)
-        #     except Exception as e:
-        #         print("PDF ERROR:", str(e))
-        #         return Response({
-        #             "error": "PDF generation failed",
-        #             "details": str(e),
-        #             "html_preview": rendered
-        #         })
-            template_content = None
-            rendered = None
-            pdf_path = None
-
-            try:
-    # 🔥 LOAD TEMPLATE FROM URL (R2 SAFE)
-                if file_ext == "html":
-                    import requests
-                    template_url = template.file.url
-                    response = requests.get(template_url)
-                    template_content = response.text
-
-    # HTML generation
-                if template_content:
-                    rendered = generate_resume_html(
-                        user=request.user,
-                        resume=resume,
-                        template_id=template.id,
-                        template_html=template_content
-                    )
-                print("RENDERED HTML:", rendered[:300] if rendered else "None")
-    # PDF generation
-                if rendered:
-                    pdf_path = generate_pdf_from_html(rendered)
-
-            except Exception as e:
-                    print("🔥 ERROR:", str(e))
-                    return Response({
-                        "error": "Generation failed",
-                        "details": str(e)
-                    })
-        # 7. Upload to R2
-        resume_url = None
-
-        if pdf_path:
-            object_key = f"generated_resumes/user_{request.user.id}_resume_{resume.id}.pdf"
-            print("PDF PATH:",pdf_path)
-            client.upload_file(
-                pdf_path,
-                settings.AWS_STORAGE_BUCKET_NAME,
-                object_key,
-                
-            )
-
-            # 🔥 SAVE KEY (VERY IMPORTANT)
-            resume.generated_resume_key = object_key
-            resume.save()
-            # print("SAVED KEY:", resume.generated_resume_key)
-
-            resume_url = client.generate_presigned_url(
-                "get_object",
-                Params={
-                    "Bucket": settings.AWS_STORAGE_BUCKET_NAME,
-                    "Key": object_key
-                },
-                ExpiresIn=3600
-            )
-        if pdf_path and os.path.exists(pdf_path):    
-            os.remove(pdf_path)
-        # 8. Template download URL
-        template_url = client.generate_presigned_url(
+        url = client.generate_presigned_url(
             "get_object",
             Params={
                 "Bucket": settings.AWS_STORAGE_BUCKET_NAME,
-                "Key": template.file.name
+                "Key": object_key
             },
             ExpiresIn=3600
         )
 
+        return Response({"generated_resume_url": url})
+
+    except Exception as e:
+        print("🔥 FINAL ERROR:", str(e))
         return Response({
-            "resume_id": resume.id,
-            "template_id": template.id,
-            "template_name": template.name,
-            "template_download_url": template_url,
-            "generated_resume_url": resume_url,
-            "file_type": file_ext,
-            "preview_html": rendered
+            "error": str(e)
         })
+
+    # def get(self, request, resume_id):
+
+    #     # 1. Get resume
+    #     try:
+    #         resume = Resume.objects.get(id=resume_id, owner=request.user)
+    #     except Resume.DoesNotExist:
+    #         return Response({"error": "Resume not found"}, status=404)
+
+    #     # 2. Get selected template
+    #     try:
+    #         selection = ResumeTemplateSelection.objects.get(resume=resume)
+    #     except ResumeTemplateSelection.DoesNotExist:
+    #         return Response({"error": "Template not selected"}, status=400)
+
+    #     template = selection.template
+    #     file_ext = template.file.name.split(".")[-1].lower()
+
+    #     # 3. Connect to R2
+    #     client = boto3.client(
+    #         "s3",
+    #         endpoint_url=settings.AWS_S3_ENDPOINT_URL,
+    #         aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+    #         aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+    #         region_name="auto"
+    #     )
+    #     # print("DEBUG KEY BEFORE IF:", resume.generated_resume_key)
+        
+    #     if resume.generated_resume_key:
+    #         signed_url = client.generate_presigned_url(
+    #             "get_object",
+    #             Params={
+    #                 "Bucket": settings.AWS_STORAGE_BUCKET_NAME,
+    #                 "Key": resume.generated_resume_key
+    #             },
+    #             ExpiresIn=3600
+    #         )
+
+    #         return Response({
+    #             "resume_id": resume.id,
+    #             "message": "Already generated",
+    #             "download_url": signed_url
+    #         })
+
+    #     # # 5. Generate HTML
+    #     # template_content = None
+    #     # rendered = None
+    #     # pdf_path = None
+
+    #     # if file_ext == "html":
+    #     #     with template.file.open("rb") as f:
+    #     #         template_content = f.read().decode("utf-8", errors="ignore")
+
+    #     # if template_content:
+    #     #     rendered = generate_resume_html(
+    #     #         user=request.user,
+    #     #         resume=resume,
+    #     #         template_id=template.id,
+    #     #         template_html=template_content
+    #     #     )
+
+    #     # # 6. Generate PDF
+    #     # if rendered:
+    #     #     print("RENDERED HTML:", rendered[:500])       
+    #     #     try:
+    #     #         pdf_path = generate_pdf_from_html(rendered)
+    #     #     except Exception as e:
+    #     #         print("PDF ERROR:", str(e))
+    #     #         return Response({
+    #     #             "error": "PDF generation failed",
+    #     #             "details": str(e),
+    #     #             "html_preview": rendered
+    #     #         })
+    #         template_content = None
+    #         rendered = None
+    #         pdf_path = None
+
+    #         try:
+    # # 🔥 LOAD TEMPLATE FROM URL (R2 SAFE)
+    #             if file_ext == "html":
+    #                 import requests
+    #                 template_url = template.file.url
+    #                 response = requests.get(template_url)
+    #                 template_content = response.text
+
+    # # HTML generation
+    #             if template_content:
+    #                 rendered = generate_resume_html(
+    #                     user=request.user,
+    #                     resume=resume,
+    #                     template_id=template.id,
+    #                     template_html=template_content
+    #                 )
+    #             print("RENDERED HTML:", rendered[:300] if rendered else "None")
+    # # PDF generation
+    #             if rendered:
+    #                 pdf_path = generate_pdf_from_html(rendered)
+
+    #         except Exception as e:
+    #                 print("🔥 ERROR:", str(e))
+    #                 return Response({
+    #                     "error": "Generation failed",
+    #                     "details": str(e)
+    #                 })
+    #     # 7. Upload to R2
+    #     resume_url = None
+
+    #     if pdf_path:
+    #         object_key = f"generated_resumes/user_{request.user.id}_resume_{resume.id}.pdf"
+    #         print("PDF PATH:",pdf_path)
+    #         client.upload_file(
+    #             pdf_path,
+    #             settings.AWS_STORAGE_BUCKET_NAME,
+    #             object_key,
+                
+    #         )
+
+    #         # 🔥 SAVE KEY (VERY IMPORTANT)
+    #         resume.generated_resume_key = object_key
+    #         resume.save()
+    #         # print("SAVED KEY:", resume.generated_resume_key)
+
+    #         resume_url = client.generate_presigned_url(
+    #             "get_object",
+    #             Params={
+    #                 "Bucket": settings.AWS_STORAGE_BUCKET_NAME,
+    #                 "Key": object_key
+    #             },
+    #             ExpiresIn=3600
+    #         )
+    #     if pdf_path and os.path.exists(pdf_path):    
+    #         os.remove(pdf_path)
+        # # 8. Template download URL
+        # template_url = client.generate_presigned_url(
+        #     "get_object",
+        #     Params={
+        #         "Bucket": settings.AWS_STORAGE_BUCKET_NAME,
+        #         "Key": template.file.name
+        #     },
+        #     ExpiresIn=3600
+        # )
+
+        # return Response({
+        #     "resume_id": resume.id,
+        #     "template_id": template.id,
+        #     "template_name": template.name,
+        #     "template_download_url": template_url,
+        #     "generated_resume_url": resume_url,
+        #     "file_type": file_ext,
+        #     "preview_html": rendered
+        # })
         
         
