@@ -2,6 +2,7 @@ from pathlib import Path
 from decouple import config  # for .env support
 from datetime import timedelta
 import dj_database_url
+import os 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # 🔐 Secret Key (from .env)
