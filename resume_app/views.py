@@ -547,8 +547,11 @@ class GenerateResumeView(APIView):
 
         # 5. Load template (SAFE)
             import requests
-            template_url = template.file.url
+            template_url = request.build_absolute_uri(template.file.url)
             print("TEMPLATE URL:", template_url)
+            
+            response = requests.get(template_url)
+            template_content = response.text
     
             response = requests.get(template_url)
             template_content = response.text
