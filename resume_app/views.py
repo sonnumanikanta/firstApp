@@ -535,11 +535,13 @@ class GenerateResumeView(APIView):
             # Template URL fix
             import requests
             template_url = request.build_absolute_uri(template.file.url)
-            print("TEMPLATE URL:", template_url)
-    
+            print("STEP 4 URL:", template_url)
+            
             response = requests.get(template_url)
+            print("STEP 5 STATUS:", response.status_code)
+            
             template_content = response.text
-            print("✅ STEP 4: Template loaded")
+            print("STEP 6 CONTENT LENGTH:", len(template_content))
     
             # Generate HTML
             rendered = generate_resume_html(
