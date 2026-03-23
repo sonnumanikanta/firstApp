@@ -1,4 +1,4 @@
-from rest_framework import viewsets, status
+ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.parsers import MultiPartParser, FormParser,JSONParser
@@ -15,10 +15,20 @@ from .utils import generate_resume_html
 from rest_framework.views import APIView
 from .pdf_utilis import generate_pdf_from_html
 
-# from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
+class CreateAdmin(APIView):
+    def get(self, request):
+        if User.objects.filter(username="admin").exists():
+            return Response({"status": "admin already exists"})
 
-
+        User.objects.create_superuser(
+            username="admin",
+            email="admin@gmail.com",
+            password="123456"
+        )
+        return Response({"status": "admin created"})
 # Permissions: only allow owner to access their own objects
 class IsOwner(BasePermission):
     def has_object_permission(self, request, view, obj):
@@ -612,3 +622,5 @@ class GenerateResumeView(APIView):
             "file_type": file_ext,
             "preview_html": rendered
         })
+        
+        
