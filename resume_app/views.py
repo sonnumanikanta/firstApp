@@ -554,35 +554,66 @@ class GenerateResumeView(APIView):
                 "download_url": signed_url
             })
 
-        # 5. Generate HTML
+        # # 5. Generate HTML
+        # template_content = None
+        # rendered = None
+        # pdf_path = None
+
+        # if file_ext == "html":
+        #     with template.file.open("rb") as f:
+        #         template_content = f.read().decode("utf-8", errors="ignore")
+
+        # if template_content:
+        #     rendered = generate_resume_html(
+        #         user=request.user,
+        #         resume=resume,
+        #         template_id=template.id,
+        #         template_html=template_content
+        #     )
+
+        # # 6. Generate PDF
+        # if rendered:
+        #     print("RENDERED HTML:", rendered[:500])       
+        #     try:
+        #         pdf_path = generate_pdf_from_html(rendered)
+        #     except Exception as e:
+        #         print("PDF ERROR:", str(e))
+        #         return Response({
+        #             "error": "PDF generation failed",
+        #             "details": str(e),
+        #             "html_preview": rendered
+        #         })
         template_content = None
         rendered = None
         pdf_path = None
 
-        if file_ext == "html":
-            with template.file.open("rb") as f:
+        try:
+    # Load template
+            if file_ext == "html":
+                with template.file.open("rb") as f:
                 template_content = f.read().decode("utf-8", errors="ignore")
 
-        if template_content:
-            rendered = generate_resume_html(
+    # Generate HTML
+            if template_content:
+                rendered = generate_resume_html(
                 user=request.user,
                 resume=resume,
                 template_id=template.id,
                 template_html=template_content
             )
 
-        # 6. Generate PDF
-        if rendered:
-            print("RENDERED HTML:", rendered[:500])       
-            try:
+            print("RENDERED HTML:", rendered[:300] if rendered else "None")
+
+    # Generate PDF
+            if rendered:
                 pdf_path = generate_pdf_from_html(rendered)
-            except Exception as e:
-                print("PDF ERROR:", str(e))
+
+        except Exception as e:
+                print("🔥 ERROR:", str(e))
                 return Response({
-                    "error": "PDF generation failed",
-                    "details": str(e),
-                    "html_preview": rendered
-                })
+                    "error": "Generation failed",
+                    "details": str(e)
+                    })
 
         # 7. Upload to R2
         resume_url = None
