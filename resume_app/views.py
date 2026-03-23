@@ -536,12 +536,17 @@ class GenerateResumeView(APIView):
             import requests
             template_url = request.build_absolute_uri(template.file.url)
             print("STEP 4 URL:", template_url)
-            
-            response = requests.get(template_url)
-            print("STEP 5 STATUS:", response.status_code)
-            
-            template_content = response.text
-            print("STEP 6 CONTENT LENGTH:", len(template_content))
+            try:
+                template_content = template.file.read().decode("utf-8")
+                print("STEP 5: Template read success, length:", len(template_content))
+            except Exception as e:
+                print("❌ TEMPLATE READ ERROR:", str(e))
+                return Response({
+                    "error": "Template read failed",
+                    "details": str(e)
+                })
+                        
+
     
             # Generate HTML
             rendered = generate_resume_html(
