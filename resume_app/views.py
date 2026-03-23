@@ -591,7 +591,7 @@ class GenerateResumeView(APIView):
         # Load template
                 if file_ext == "html":
                     with template.file.open("rb") as f:
-                    template_content = f.read().decode("utf-8", errors="ignore")
+                        template_content = f.read().decode("utf-8", errors="ignore")
     
         # Generate HTML
                 if template_content:
