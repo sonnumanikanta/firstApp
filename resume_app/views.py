@@ -511,94 +511,56 @@ class SelectTemplateView(APIView):
 class GenerateResumeView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request, resume_id):
+    try:
+        print("🔥 STEP 1: Start")
 
-        try:
-            print("🔥 NEW CODE RUNNING")
+        # Resume
+        resume = Resume.objects.get(id=resume_id, owner=request.user)
+        print("✅ STEP 2: Resume fetched")
 
-        # 1. Get resume
-            resume = Resume.objects.get(id=resume_id, owner=request.user)
+        # Template selection
+        selection = ResumeTemplateSelection.objects.get(resume=resume)
+        template = selection.template
+        print("✅ STEP 3: Template fetched")
 
-        # 2. Get selected template
-            selection = ResumeTemplateSelection.objects.get(resume=resume)
+        # R2 client
+        client = boto3.client(
+            "s3",
+            endpoint_url=settings.AWS_S3_ENDPOINT_URL,
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+            region_name="auto"
+        )
 
-            template = selection.template
-            file_ext = template.file.name.split(".")[-1].lower()
+        # Template URL fix
+        import requests
+        template_url = request.build_absolute_uri(template.file.url)
+        print("TEMPLATE URL:", template_url)
 
-        # 3. R2 client
-            client = boto3.client(
-                "s3",
-                endpoint_url=settings.AWS_S3_ENDPOINT_URL,
-                aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-                aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-                region_name="auto"
-            )
+        response = requests.get(template_url)
+        template_content = response.text
+        print("✅ STEP 4: Template loaded")
 
-        # 4. Already generated
-            if resume.generated_resume_key:
-                signed_url = client.generate_presigned_url(
-                    "get_object",
-                    Params={
-                        "Bucket": settings.AWS_STORAGE_BUCKET_NAME,
-                        "Key": resume.generated_resume_key
-                    },
-                    ExpiresIn=3600
-                )
-                return Response({"download_url": signed_url})
+        # Generate HTML
+        rendered = generate_resume_html(
+            user=request.user,
+            resume=resume,
+            template_id=template.id,
+            template_html=template_content
+        )
+        print("✅ STEP 5: HTML generated")
 
-        # 5. Load template (SAFE)
-            import requests
-            template_url = request.build_absolute_uri(template.file.url)
-            print("TEMPLATE URL:", template_url)
-            
-            response = requests.get(template_url)
-            template_content = response.text
-    
-            response = requests.get(template_url)
-            template_content = response.text
-    
-            # 6. Generate HTML
-            rendered = generate_resume_html(
-                user=request.user,
-                resume=resume,
-                template_id=template.id,
-                template_html=template_content
-            )
-    
-            print("HTML GENERATED")
-    
-            # 7. Generate PDF
-            pdf_path = generate_pdf_from_html(rendered)
-            print("PDF GENERATED:", pdf_path)
-
-        # 8. Upload
-            object_key = f"generated_resumes/user_{request.user.id}_resume_{resume.id}.pdf"
-    
-            client.upload_file(
-                pdf_path,
-                settings.AWS_STORAGE_BUCKET_NAME,
-                object_key
-            )
-    
-            resume.generated_resume_key = object_key
-            resume.save()
-    
-            url = client.generate_presigned_url(
-                "get_object",
-                Params={
-                    "Bucket": settings.AWS_STORAGE_BUCKET_NAME,
-                    "Key": object_key
-                },
-                ExpiresIn=3600
-            )
-    
-            return Response({"generated_resume_url": url})
-
-        except Exception as e:
-            print("🔥 FINAL ERROR:", str(e))
-            return Response({
-                "error": str(e)
+        # TEMP: SKIP PDF (VERY IMPORTANT)
+        return Response({
+            "message": "HTML SUCCESS",
+            "preview": rendered[:500]
         })
 
+    except Exception as e:
+        print("🔥 FINAL ERROR:", str(e))
+        return Response({
+            "error": str(e)
+        })
     # def get(self, request, resume_id):
 
     #     # 1. Get resume
