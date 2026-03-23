@@ -568,27 +568,27 @@ class GenerateResumeView(APIView):
             print("PDF GENERATED:", pdf_path)
 
         # 8. Upload
-        object_key = f"generated_resumes/user_{request.user.id}_resume_{resume.id}.pdf"
-
-        client.upload_file(
-            pdf_path,
-            settings.AWS_STORAGE_BUCKET_NAME,
-            object_key
-        )
-
-        resume.generated_resume_key = object_key
-        resume.save()
-
-        url = client.generate_presigned_url(
-            "get_object",
-            Params={
-                "Bucket": settings.AWS_STORAGE_BUCKET_NAME,
-                "Key": object_key
-            },
-            ExpiresIn=3600
-        )
-
-        return Response({"generated_resume_url": url})
+            object_key = f"generated_resumes/user_{request.user.id}_resume_{resume.id}.pdf"
+    
+            client.upload_file(
+                pdf_path,
+                settings.AWS_STORAGE_BUCKET_NAME,
+                object_key
+            )
+    
+            resume.generated_resume_key = object_key
+            resume.save()
+    
+            url = client.generate_presigned_url(
+                "get_object",
+                Params={
+                    "Bucket": settings.AWS_STORAGE_BUCKET_NAME,
+                    "Key": object_key
+                },
+                ExpiresIn=3600
+            )
+    
+            return Response({"generated_resume_url": url})
 
     except Exception as e:
         print("🔥 FINAL ERROR:", str(e))
