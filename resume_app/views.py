@@ -583,37 +583,37 @@ class GenerateResumeView(APIView):
         #             "details": str(e),
         #             "html_preview": rendered
         #         })
-        template_content = None
-        rendered = None
-        pdf_path = None
-
-        try:
-    # Load template
-            if file_ext == "html":
-                with template.file.open("rb") as f:
-                template_content = f.read().decode("utf-8", errors="ignore")
-
-    # Generate HTML
-            if template_content:
-                rendered = generate_resume_html(
-                user=request.user,
-                resume=resume,
-                template_id=template.id,
-                template_html=template_content
-            )
-
-            print("RENDERED HTML:", rendered[:300] if rendered else "None")
-
-    # Generate PDF
-            if rendered:
-                pdf_path = generate_pdf_from_html(rendered)
-
-        except Exception as e:
-                print("🔥 ERROR:", str(e))
-                return Response({
-                    "error": "Generation failed",
-                    "details": str(e)
-                    })
+            template_content = None
+            rendered = None
+            pdf_path = None
+    
+            try:
+        # Load template
+                if file_ext == "html":
+                    with template.file.open("rb") as f:
+                    template_content = f.read().decode("utf-8", errors="ignore")
+    
+        # Generate HTML
+                if template_content:
+                    rendered = generate_resume_html(
+                    user=request.user,
+                    resume=resume,
+                    template_id=template.id,
+                    template_html=template_content
+                )
+    
+                print("RENDERED HTML:", rendered[:300] if rendered else "None")
+    
+        # Generate PDF
+                if rendered:
+                    pdf_path = generate_pdf_from_html(rendered)
+    
+            except Exception as e:
+                    print("🔥 ERROR:", str(e))
+                    return Response({
+                        "error": "Generation failed",
+                        "details": str(e)
+                        })
 
         # 7. Upload to R2
         resume_url = None
