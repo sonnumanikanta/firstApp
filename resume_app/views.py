@@ -591,9 +591,9 @@ class GenerateResumeView(APIView):
             return Response({"generated_resume_url": url})
 
         except Exception as e:
-        print("🔥 FINAL ERROR:", str(e))
-        return Response({
-            "error": str(e)
+            print("🔥 FINAL ERROR:", str(e))
+            return Response({
+                "error": str(e)
         })
 
     # def get(self, request, resume_id):
