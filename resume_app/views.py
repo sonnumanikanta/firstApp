@@ -511,56 +511,56 @@ class SelectTemplateView(APIView):
 class GenerateResumeView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request, resume_id):
-    try:
-        print("🔥 STEP 1: Start")
-
-        # Resume
-        resume = Resume.objects.get(id=resume_id, owner=request.user)
-        print("✅ STEP 2: Resume fetched")
-
-        # Template selection
-        selection = ResumeTemplateSelection.objects.get(resume=resume)
-        template = selection.template
-        print("✅ STEP 3: Template fetched")
-
-        # R2 client
-        client = boto3.client(
-            "s3",
-            endpoint_url=settings.AWS_S3_ENDPOINT_URL,
-            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-            region_name="auto"
-        )
-
-        # Template URL fix
-        import requests
-        template_url = request.build_absolute_uri(template.file.url)
-        print("TEMPLATE URL:", template_url)
-
-        response = requests.get(template_url)
-        template_content = response.text
-        print("✅ STEP 4: Template loaded")
-
-        # Generate HTML
-        rendered = generate_resume_html(
-            user=request.user,
-            resume=resume,
-            template_id=template.id,
-            template_html=template_content
-        )
-        print("✅ STEP 5: HTML generated")
-
-        # TEMP: SKIP PDF (VERY IMPORTANT)
-        return Response({
-            "message": "HTML SUCCESS",
-            "preview": rendered[:500]
-        })
-
-    except Exception as e:
-        print("🔥 FINAL ERROR:", str(e))
-        return Response({
-            "error": str(e)
-        })
+        try:
+            print("🔥 STEP 1: Start")
+    
+            # Resume
+            resume = Resume.objects.get(id=resume_id, owner=request.user)
+            print("✅ STEP 2: Resume fetched")
+    
+            # Template selection
+            selection = ResumeTemplateSelection.objects.get(resume=resume)
+            template = selection.template
+            print("✅ STEP 3: Template fetched")
+    
+            # R2 client
+            client = boto3.client(
+                "s3",
+                endpoint_url=settings.AWS_S3_ENDPOINT_URL,
+                aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+                region_name="auto"
+            )
+    
+            # Template URL fix
+            import requests
+            template_url = request.build_absolute_uri(template.file.url)
+            print("TEMPLATE URL:", template_url)
+    
+            response = requests.get(template_url)
+            template_content = response.text
+            print("✅ STEP 4: Template loaded")
+    
+            # Generate HTML
+            rendered = generate_resume_html(
+                user=request.user,
+                resume=resume,
+                template_id=template.id,
+                template_html=template_content
+            )
+            print("✅ STEP 5: HTML generated")
+    
+            # TEMP: SKIP PDF (VERY IMPORTANT)
+            return Response({
+                "message": "HTML SUCCESS",
+                "preview": rendered[:500]
+            })
+    
+        except Exception as e:
+            print("🔥 FINAL ERROR:", str(e))
+            return Response({
+                "error": str(e)
+            })
     # def get(self, request, resume_id):
 
     #     # 1. Get resume
