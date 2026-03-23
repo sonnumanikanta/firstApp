@@ -608,7 +608,7 @@ class GenerateResumeView(APIView):
                 if rendered:
                     pdf_path = generate_pdf_from_html(rendered)
 
-                except Exception as e:
+            except Exception as e:
                     print("🔥 ERROR:", str(e))
                     return Response({
                         "error": "Generation failed",
