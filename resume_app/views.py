@@ -2,7 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.parsers import MultiPartParser, FormParser,JSONParser
-from rest_framework.permissions import IsAuthenticated, BasePermission
+from rest_framework.permissions import IsAuthenticated, BasePermission,AllowAny
 from rest_framework.views import APIView
 import boto3
 import os 
@@ -19,6 +19,7 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 class CreateAdmin(APIView):
+    permission_classes = [AllowAny]
     def get(self, request):
         if User.objects.filter(username="admin").exists():
             return Response({"status": "admin already exists"})
