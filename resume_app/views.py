@@ -616,7 +616,7 @@ class GenerateResumeView(APIView):
                 },
                 ExpiresIn=3600
             )
-           return Response({
+            return Response({
                 "message": "Resume generated successfully",
                 "download_url": download_url
             }) 
