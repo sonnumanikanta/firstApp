@@ -558,8 +558,8 @@ class GenerateResumeView(APIView):
                 template_html=template_content
             )
             print("✅ STEP 5: HTML generated")
-            pdf_path = generate_pdf_from_html(rendered)
-            if not pdf_path:
+            pdf_url = generate_pdf_from_html(rendered)
+            if not pdf_url:
                 return Response({
                     "error": "PDF generation failed"
                 }, status=500)
