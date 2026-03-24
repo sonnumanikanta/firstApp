@@ -546,7 +546,25 @@ class GenerateResumeView(APIView):
                 <p>{{ email }}</p>
                 
                 <h2>Skills</h2>
-                <p>{{ skills }}</p>
+                <ul>
+                {% for skill in skills %}
+                    <li>{{ skill }}</li>
+                {% endfor %}
+                </ul>
+                
+                <h2>Experience</h2>
+                <ul>
+                {% for exp in experience %}
+                    <li>{{ exp.job_title }} - {{ exp.company }}</li>
+                {% endfor %}
+                </ul>
+                
+                <h2>Education</h2>
+                <ul>
+                {% for edu in education %}
+                    <li>{{ edu.degree }} - {{ edu.institution }}</li>
+                {% endfor %}
+                </ul>
                 
                 </body>
                 </html>
