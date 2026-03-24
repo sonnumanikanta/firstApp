@@ -561,30 +561,30 @@ class GenerateResumeView(APIView):
                 return Response({
                     "error": "PDF generation failed"
                 }, status=500)
-            object_key = f"generated_resumes/user_{request.user.id}_resume_{resume.id}.pdf"
+            # object_key = f"generated_resumes/user_{request.user.id}_resume_{resume.id}.pdf"
 
-            client = boto3.client(
-                "s3",
-                endpoint_url=settings.AWS_S3_ENDPOINT_URL,
-                aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-                aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-                region_name="auto"
-            )
-            client.upload_file(
-                pdf_url,
-                settings.AWS_STORAGE_BUCKET_NAME,
-                object_key
-            ) 
-            resume.generated_resume_key = object_key
-            resume.save()
-            download_url = client.generate_presigned_url(
-                "get_object",
-                Params={
-                    "Bucket": settings.AWS_STORAGE_BUCKET_NAME,
-                    "Key": object_key
-                },
-                ExpiresIn=3600
-            )
+            # client = boto3.client(
+            #     "s3",
+            #     endpoint_url=settings.AWS_S3_ENDPOINT_URL,
+            #     aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            #     aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+            #     region_name="auto"
+            # )
+            # client.upload_file(
+            #     pdf_url,
+            #     settings.AWS_STORAGE_BUCKET_NAME,
+            #     object_key
+            # ) 
+            # resume.generated_resume_key = object_key
+            # resume.save()
+            # download_url = client.generate_presigned_url(
+            #     "get_object",
+            #     Params={
+            #         "Bucket": settings.AWS_STORAGE_BUCKET_NAME,
+            #         "Key": object_key
+            #     },
+            #     ExpiresIn=3600
+            # )
             return Response({
                 "message": "Resume generated successfully",
                 "download_url": download_url
