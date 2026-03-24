@@ -49,7 +49,13 @@ def generate_resume_html(user, resume, template_id, template_html):
         "linkedin": resume.linkedin or "",
         "github": resume.github or "",
         "skills": [s.name for s in resume.skills.all()],
-        "experience": resume.experiences.all(),
+        "experience": 
+            {
+                "job_title": e.job_title,
+                "company": e.company
+            }
+            for e in resume.experiences.all()
+],
         "education":[
             {
                 "degree": e.degree,
