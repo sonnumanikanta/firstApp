@@ -571,7 +571,7 @@ class GenerateResumeView(APIView):
                 region_name="auto"
             )
             client.upload_file(
-                pdf_path,
+                pdf_url,
                 settings.AWS_STORAGE_BUCKET_NAME,
                 object_key
             ) 
