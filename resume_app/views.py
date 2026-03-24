@@ -534,6 +534,8 @@ class GenerateResumeView(APIView):
     
             # Template URL fix
             template_url = request.build_absolute_uri(template.file.url)
+            print("FILE PATH:", template.file.path)
+            print("EXISTS:", os.path.exists(template.file.path))
             print("STEP 4 URL:", template_url)
             try:
                 with template.file.open("rb") as f:
