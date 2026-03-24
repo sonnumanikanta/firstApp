@@ -10,6 +10,7 @@ dj-database-url==2.2.0
 sendgrid
 xhtml2pdf
 boto3
+django-storages
 
 
 
