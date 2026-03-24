@@ -174,7 +174,7 @@ CSRF_TRUSTED_ORIGINS = [
 # }
 # # ================= AWS S3 CONFIG =================
 
-DEFAULT_FILE_STORAGE = "storages.backends.s3.S3Storage"
+DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
 # AWS_ACCESS_KEY_ID = "YOUR_KEY"
 # AWS_SECRET_ACCESS_KEY = "YOUR_SECRET"
