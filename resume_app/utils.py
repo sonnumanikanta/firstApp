@@ -52,10 +52,7 @@ def generate_resume_html(user, resume, template_id, template_html):
         "experience": resume.experiences.all(),
         "education": resume.education.all(),
     }
-
-    rendered = template_html
-
-    for key, value in data.items():
-        rendered = rendered.replace(f"{{{{{key}}}}}", str(value))
+    template = Template(template_html)
+    rendered = template.render(Context(context))
 
     return rendered
