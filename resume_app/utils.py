@@ -50,7 +50,13 @@ def generate_resume_html(user, resume, template_id, template_html):
         "github": resume.github or "",
         "skills": [s.name for s in resume.skills.all()],
         "experience": resume.experiences.all(),
-        "education": resume.education.all(),
+        "education":[
+            {
+                "degree": e.degree,
+                "institution": e.institution
+            }
+            for e in resume.education.all()
+        ],
     }
     template = Template(template_html)
     rendered = template.render(Context(data))
