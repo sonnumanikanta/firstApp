@@ -587,7 +587,7 @@ class GenerateResumeView(APIView):
             # )
             return Response({
                 "message": "Resume generated successfully",
-                "download_url": download_url
+                "download_url": pdf_url
             })
         except Exception as e:
             print("❌ FINAL ERROR:", str(e))
