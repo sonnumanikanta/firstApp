@@ -64,6 +64,8 @@ def generate_resume_html(user, resume, template_id, template_html):
             for e in resume.education.all()
         ],
     }
+    
+    print("FINAL EDUCATION:", data["education"])
     template = Template(template_html)
     rendered = template.render(Context(data))
 
