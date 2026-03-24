@@ -587,18 +587,39 @@ class GenerateResumeView(APIView):
                 template_html=template_content
             )
             print("✅ STEP 5: HTML generated")
-    
-            # TEMP: SKIP PDF (VERY IMPORTANT)
-            return Response({
-                "message": "HTML SUCCESS",
-                "preview": rendered
-            })
-    
-        except Exception as e:
-            print("🔥 FINAL ERROR:", str(e))
-            return Response({
-                "error": str(e)
-            })
+            pdf_path = generate_pdf_from_html(rendered)
+            if not pdf_path:
+                return Response({
+                    "error": "PDF generation failed"
+                }, status=500)
+            object_key = f"generated_resumes/user_{request.user.id}_resume_{resume.id}.pdf"
+
+            client = boto3.client(
+                "s3",
+                endpoint_url=settings.AWS_S3_ENDPOINT_URL,
+                aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+                region_name="auto"
+            )
+            client.upload_file(
+                pdf_path,
+                settings.AWS_STORAGE_BUCKET_NAME,
+                object_key
+            ) 
+            resume.generated_resume_key = object_key
+            resume.save()
+            download_url = client.generate_presigned_url(
+                "get_object",
+                Params={
+                    "Bucket": settings.AWS_STORAGE_BUCKET_NAME,
+                    "Key": object_key
+                },
+                ExpiresIn=3600
+            )
+           return Response({
+                "message": "Resume generated successfully",
+                "download_url": download_url
+}) 
     # def get(self, request, resume_id):
 
     #     # 1. Get resume
