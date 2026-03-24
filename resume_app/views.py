@@ -533,43 +533,12 @@ class GenerateResumeView(APIView):
             )
     
             # Template URL fix
-            import requests
             template_url = request.build_absolute_uri(template.file.url)
             print("STEP 4 URL:", template_url)
             try:
-                # template_content = template.file.read().decode("utf-8")
-                template_content = """
-                <html>
-                <body>
-                
-                <h1>{{ full_name }}</h1>
-                <p>{{ email }}</p>
-                
-                <h2>Skills</h2>
-                <ul>
-                {% for skill in skills %}
-                    <li>{{ skill }}</li>
-                {% endfor %}
-                </ul>
-                
-                <h2>Experience</h2>
-                <ul>
-                {% for exp in experience %}
-                    <li>{{ exp.job_title }} - {{ exp.company }}</li>
-                {% endfor %}
-                </ul>
-                
-                <h2>Education</h2>
-                <ul>
-                {% for edu in education %}
-                    <li>{{ edu.degree }} - {{ edu.institution }}</li>
-                {% endfor %}
-                </ul>
-                
-                </body>
-                </html>
-                """
-                print("STEP 5: Template read success, length:", len(template_content))
+                with template.file.open("rb") as f:
+                    template_content = template.file.read().decode("utf-8")
+                    print("STEP 5: Template read success, length:", len(template_content))
             except Exception as e:
                 print("❌ TEMPLATE READ ERROR:", str(e))
                 return Response({
