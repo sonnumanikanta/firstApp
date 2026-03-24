@@ -53,6 +53,6 @@ def generate_resume_html(user, resume, template_id, template_html):
         "education": resume.education.all(),
     }
     template = Template(template_html)
-    rendered = template.render(Context(context))
+    rendered = template.render(Context(data))
 
     return rendered
