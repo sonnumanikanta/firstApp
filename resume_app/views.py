@@ -591,7 +591,7 @@ class GenerateResumeView(APIView):
             # TEMP: SKIP PDF (VERY IMPORTANT)
             return Response({
                 "message": "HTML SUCCESS",
-                "preview": rendered[:500]
+                "preview": rendered
             })
     
         except Exception as e:
