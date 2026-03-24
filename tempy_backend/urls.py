@@ -10,6 +10,7 @@ from django.contrib import admin
 from auth_app.views import smtp_test,health_check,db_test
 
 
+
 urlpatterns = [
     # ✅ Auth routes
     path('auth/', include('auth_app.urls')),
