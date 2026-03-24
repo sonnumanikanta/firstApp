@@ -619,7 +619,7 @@ class GenerateResumeView(APIView):
            return Response({
                 "message": "Resume generated successfully",
                 "download_url": download_url
-}) 
+            }) 
     # def get(self, request, resume_id):
 
     #     # 1. Get resume
