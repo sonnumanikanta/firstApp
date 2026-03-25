@@ -12,6 +12,14 @@ xhtml2pdf
 boto3
 django-storages
 
+#ats engine 
+numpy
+scikit-learn
+scipy
+rapidfuzz
+textstat
+pdfminer.six
+python-docx
 
 
 
