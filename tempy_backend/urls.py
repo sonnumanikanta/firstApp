@@ -23,6 +23,7 @@ urlpatterns = [
 
     # # ✅ Resume routes (CRUD + photo upload + ATS scoring)
     path('api/', include('resume_app.urls')),   # exposes /api/resumes/, /api/experiences/, /api/education/, /api/skills/
+    path('api/ats/', include('ats_engine.urls')),
 
     # # ✅ Other apps
     # path('biodata/', include('biodata_app.urls')),
