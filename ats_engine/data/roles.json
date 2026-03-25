@@ -1,0 +1,68 @@
+{
+  "Data Analyst": {
+    "skills": [
+      "sql",
+      "excel",
+      "power bi",
+      "tableau",
+      "python",
+      "pandas",
+      "statistics",
+      "dashboard"
+    ],
+    "keywords": [
+      "reporting",
+      "kpi",
+      "analysis",
+      "insights",
+      "visualization",
+      "stakeholders",
+      "a/b",
+      "metrics"
+    ]
+  },
+  "Data Engineer": {
+    "skills": [
+      "sql",
+      "python",
+      "spark",
+      "airflow",
+      "dbt",
+      "kafka",
+      "snowflake",
+      "aws",
+      "docker",
+      "kubernetes"
+    ],
+    "keywords": [
+      "etl",
+      "pipeline",
+      "data warehouse",
+      "orchestration",
+      "streaming",
+      "batch",
+      "lakehouse"
+    ]
+  },
+  "ML Engineer": {
+    "skills": [
+      "python",
+      "scikit-learn",
+      "pytorch",
+      "tensorflow",
+      "mlflow",
+      "docker",
+      "kubernetes",
+      "aws"
+    ],
+    "keywords": [
+      "training",
+      "deployment",
+      "model",
+      "inference",
+      "monitoring",
+      "feature store",
+      "mlops"
+    ]
+  }
+}
