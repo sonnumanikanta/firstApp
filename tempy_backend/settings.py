@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     # 'socialcontent_app',
     # 'greeting_app',
     'storages',
+    'ats_engine',
 ]
 
 MIDDLEWARE = [
