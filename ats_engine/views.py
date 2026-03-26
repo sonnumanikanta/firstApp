@@ -6,7 +6,7 @@ from django.core.cache import cache
 from django.conf import settings
 
 from .serializers import AtsAnalyzeRequestSerializer
-from .services.analyze import analyze_resume_against_jd
+from .services.analyze import analyze_resume_against_jd, parse_file_to_text
 from .models import ResumeAnalysis
 
 CACHE_TTL_SECONDS = getattr(settings, "ATS_ENGINE_CACHE_TTL_SECONDS", 60 * 60)  # 1 hour
@@ -29,7 +29,7 @@ class AtsAnalyzeView(APIView):
         if data.get("resume_text"):
             resume_text = data["resume_text"]
         else:
-            resume_text = analyze_resume_against_jd.parse_file_to_text(data["resume_file"])
+            resume_text = parse_file_to_text(data["resume_file"])
 
         resume_hash = _sha256(resume_text)
         jd_hash = _sha256(jd_text)
