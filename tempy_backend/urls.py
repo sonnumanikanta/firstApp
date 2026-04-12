@@ -29,7 +29,7 @@ urlpatterns = [
     # path('biodata/', include('biodata_app.urls')),
     # path('invitations/', include('invitation_app.urls')),
     # path('certificates/', include('certificate_app.urls')),
-    # path('visiting-cards/', include('visiting_card_app.urls')),
+    path('visiting-cards/', include('visiting_card_app.urls')),
     # path('funeral-notices/', include('funeral_app.urls')),
     # path('business-documents/', include('businessdoc_app.urls')),
     # path('socialcontent/', include('socialcontent_app.urls')),
