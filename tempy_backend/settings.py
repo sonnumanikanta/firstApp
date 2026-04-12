@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     # 'biodata_app',
     # 'invitation_app',
     # 'certificate_app',
-    # 'visiting_card_app',
+    'visiting_card_app',
     # 'funeral_app',
     # 'businessdoc_app',
     # 'socialcontent_app',
