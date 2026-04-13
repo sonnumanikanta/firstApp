@@ -156,6 +156,7 @@ class GenerateVisitingCardView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, vc_id):
+        print("🔥 HELLO NEW DEPLOY - ENTERED GENERATE API")
         try:
             vc = VisitingCard.objects.get(id=vc_id, user=request.user)
         except VisitingCard.DoesNotExist:
