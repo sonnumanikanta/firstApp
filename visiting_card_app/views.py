@@ -195,6 +195,19 @@ class GenerateVisitingCardView(APIView):
 
         vc.generated_pdf_key = pdf_url
         vc.save(update_fields=['generated_pdf_key'])
+        print("STEP 1: PDF URL GENERATED:", pdf_url)
+        print("STEP 2: URL LENGTH:", len(pdf_url))
+        
+        try:
+            vc.generated_pdf_key = pdf_url
+            print("STEP 3: Assign success")
+        
+            vc.save(update_fields=['generated_pdf_key'])
+            print("STEP 4: Save success")
+        
+        except Exception as e:
+            print("ERROR DURING SAVE:", str(e))
+            raise
 
         return Response({
             "status": True,
