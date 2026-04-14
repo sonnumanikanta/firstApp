@@ -44,7 +44,7 @@ class VisitingCard(models.Model):
     template_id = models.CharField(max_length=50, blank=True, null=True)
     
     # Generated PDF
-    generated_pdf_key = models.CharField(max_length=400,blank=True, null=True)
+    generated_pdf_key = models.CharField(max_length=500,blank=True, null=True)
 
     # Metadata
     created_at = models.DateTimeField(auto_now_add=True)
