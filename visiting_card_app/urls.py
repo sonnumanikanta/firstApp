@@ -16,5 +16,6 @@ urlpatterns = [
     path('templates/', VisitingCardTemplateListView.as_view(), name='visiting-card-templates'),
     path('select-template/', SelectVisitingCardTemplateView.as_view(), name='visiting-card-select-template'),
     path('generate/<int:vc_id>/', GenerateVisitingCardView.as_view(), name='generate-visiting-card'),
+    path('preview-data/<int:vc_id>/', VisitingCardPreviewDataView.as_view()),
     path('', include(router.urls)),
 ]
