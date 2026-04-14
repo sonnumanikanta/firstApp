@@ -152,6 +152,35 @@ class SelectVisitingCardTemplateView(APIView):
 # Generate PDF
 # GET /api/visiting-cards/generate/{vc_id}/
 # ==========================================
+class VisitingCardPreviewDataView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, vc_id):
+        try:
+            vc = VisitingCard.objects.get(id=vc_id, user=request.user)
+        except VisitingCard.DoesNotExist:
+            return Response({"error": "Visiting Card not found"}, status=404)
+
+        return Response({
+            "status": True,
+            "data": {
+                "full_name": vc.full_name,
+                "designation": vc.designation,
+                "email": vc.email,
+                "phone": vc.phone,
+                "company_name": vc.company_name,
+                "company_website": vc.company_website,
+                "company_email": vc.company_email,
+                "company_phone": vc.company_phone,
+                "street": vc.street,
+                "city": vc.city,
+                "district": vc.district,
+                "pincode": vc.pincode,
+                "slogan": vc.slogan,
+                "template_id": vc.template_id,
+                "generated_pdf_key": vc.generated_pdf_key
+            }
+        })
 class GenerateVisitingCardView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -215,3 +244,4 @@ class GenerateVisitingCardView(APIView):
             "message": "Visiting Card generated successfully",
             "download_url": pdf_url
         })
+        
