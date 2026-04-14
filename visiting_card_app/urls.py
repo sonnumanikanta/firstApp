@@ -5,7 +5,8 @@ from .views import (
     VisitingCardSaveView,
     VisitingCardTemplateListView,
     SelectVisitingCardTemplateView,
-    GenerateVisitingCardView
+    GenerateVisitingCardView,
+    VisitingCardPreviewDataView
 )
 
 router = DefaultRouter()
