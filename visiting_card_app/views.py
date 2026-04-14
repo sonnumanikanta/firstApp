@@ -178,7 +178,6 @@ class VisitingCardPreviewDataView(APIView):
                 "pincode": vc.pincode,
                 "slogan": vc.slogan,
                 "template_id": vc.template_id,
-                "generated_pdf_key": vc.generated_pdf_key
             }
         })
 class GenerateVisitingCardView(APIView):
