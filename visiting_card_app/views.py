@@ -155,30 +155,35 @@ class SelectVisitingCardTemplateView(APIView):
 class VisitingCardPreviewDataView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, vc_id):
-        try:
-            vc = VisitingCard.objects.get(id=vc_id, user=request.user)
-        except VisitingCard.DoesNotExist:
-            return Response({"error": "Visiting Card not found"}, status=404)
+    def get(self, request):
+        vc = VisitingCard.objects.filter(user=request.user).order_by('-id').first()
+
+        if not vc:
+            return Response({"error": "No Visiting Card found"}, status=404)
+
+        templates = VisitingCardTemplate.objects.all()
+
+        preview_list = []
+
+        for template in templates:
+            preview_list.append({
+                "template_id": template.id,
+                "template_name": template.name,
+                "user_data": {
+                    "full_name": vc.full_name,
+                    "designation": vc.designation,
+                    "email": vc.email,
+                    "phone": vc.phone,
+                    "company_name": vc.company_name,
+                    "city": vc.city,
+                    "pincode": vc.pincode,
+                    "slogan": vc.slogan
+                }
+            })
 
         return Response({
             "status": True,
-            "data": {
-                "full_name": vc.full_name,
-                "designation": vc.designation,
-                "email": vc.email,
-                "phone": vc.phone,
-                "company_name": vc.company_name,
-                "company_website": vc.company_website,
-                "company_email": vc.company_email,
-                "company_phone": vc.company_phone,
-                "street": vc.street,
-                "city": vc.city,
-                "district": vc.district,
-                "pincode": vc.pincode,
-                "slogan": vc.slogan,
-                "template_id": vc.template_id,
-            }
+            "data": preview_list
         })
 class GenerateVisitingCardView(APIView):
     permission_classes = [IsAuthenticated]
