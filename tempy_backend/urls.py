@@ -26,7 +26,7 @@ urlpatterns = [
     path('api/ats/', include('ats_engine.urls')),
 
     # # ✅ Other apps
-    # path('biodata/', include('biodata_app.urls')),
+     path('biodata/', include('biodata_app.urls')),
     # path('invitations/', include('invitation_app.urls')),
     # path('certificates/', include('certificate_app.urls')),
     path('visiting-cards/', include('visiting_card_app.urls')),
