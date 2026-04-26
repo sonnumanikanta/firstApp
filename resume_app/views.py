@@ -27,7 +27,7 @@ class CreateAdmin(APIView):
         User.objects.create_superuser(
             username="admin",
             email="admin@gmail.com",
-            password="123456"
+            password="12345"
         )
         return Response({"status": "admin created"})
 # Permissions: only allow owner to access their own objects
