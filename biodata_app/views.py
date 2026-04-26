@@ -159,13 +159,15 @@ class GenerateBiodataView(APIView):
         # ✅ Fix key
         pdf_key = bio.generated_pdf_key
 
-        # remove full URL
-        if pdf_key and pdf_key.startswith("http"):
-            pdf_key = pdf_key.split(".com/")[-1]
 
-        # remove duplicate bucket
-        if pdf_key.startswith(settings.AWS_STORAGE_BUCKET_NAME + "/"):
-            pdf_key = pdf_key.replace(settings.AWS_STORAGE_BUCKET_NAME + "/", "")
+        if pdf_key:
+            if pdf_key.startswith("http"):
+                pdf_key = pdf_key.split(".com/")[-1]
+        
+            if pdf_key.startswith(settings.AWS_STORAGE_BUCKET_NAME + "/"):
+                pdf_key = pdf_key.replace(settings.AWS_STORAGE_BUCKET_NAME + "/", "")
+
+    
         # ✅ Use corrected key
         if pdf_key:
             pdf_url = generate_signed_url(pdf_key)
