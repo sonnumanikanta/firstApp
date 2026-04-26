@@ -160,15 +160,20 @@ class GenerateBiodataView(APIView):
         pdf_key = bio.generated_pdf_key
         if pdf_key:
             original_key = pdf_key 
-            if pdf_key:
-                if pdf_key.startswith("http"):
-                    pdf_key = pdf_key.split(".com/")[-1]
-            
-                if pdf_key.startswith(settings.AWS_STORAGE_BUCKET_NAME + "/"):
-                    pdf_key = pdf_key.replace(settings.AWS_STORAGE_BUCKET_NAME + "/", "")
-                if pdf_key != original_key:
-                    bio.generated_pdf_key = pdf_key
-                    bio.save(update_fields=['generated_pdf_key'])    
+            if pdf_key.startswith("http"):
+                pdf_key = pdf_key.split(".com/")[-1]
+
+
+            if "?" in pdf_key:
+                pdf_key = pdf_key.split("?")[0]
+        
+            # remove duplicate bucket
+            if pdf_key.startswith(settings.AWS_STORAGE_BUCKET_NAME + "/"):
+                pdf_key = pdf_key.replace(settings.AWS_STORAGE_BUCKET_NAME + "/", "")
+        
+            if pdf_key != original_key:
+                bio.generated_pdf_key = pdf_key
+                bio.save(update_fields=['generated_pdf_key'])
 
     
         # ✅ Use corrected key
